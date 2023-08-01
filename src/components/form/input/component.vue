@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, reactive, watch, onBeforeUnmount } from 'vue'
+import NativeInput from '../native-input/component.vue'
 // @TODO
-// import NativeInput from './native-input.vue'
-// import InputLabel from './input-label.vue'
+// import InputLabel from '../label/component.vue'
 
 interface Emits {
     (e: 'update:modelValue', value: any): void
@@ -29,9 +29,12 @@ const prop = withDefaults(defineProps<Props>(), {
 const id = computed(() => `input-${(new Date).valueOf()}-${prop.name.toLowerCase().replace(/ |\-/gi, '_')}`)
 /** Bidirectional state value */
 const value = ref(prop.modelValue)
-const isTyping = ref(false)
-const isFilled = ref(false)
-const error = ref()
+
+const inputState = reactive({
+    filled: false,
+    typing: false,
+    error: undefined
+})
 
 const updateValue = val => {
     emit('update:modelValue', val)
@@ -62,9 +65,7 @@ onBeforeUnmount(() => {
             >
                 <native-input
                     v-model="value"
-                    v-model:typing="isTyping"
-                    v-model:filled="isFilled"
-                    v-model:error="error"
+                    v-model:state="inputState"
                     :attributes="{
                         name,
                         id,
@@ -81,12 +82,12 @@ onBeforeUnmount(() => {
             <!--  -->
             <slot
                 name="label"
-                :typing="isTyping"
-                :filled="isFilled"
+                :typing="inputState.typing"
+                :filled="inputState.filled"
             >
                 <input-label
                     :label-for="id"
-                    :hide="isFilled"
+                    :hide="inputState.filled"
                     :textarea="variant == 'textarea'"
                     :floating="true"
                 >
@@ -97,13 +98,13 @@ onBeforeUnmount(() => {
         <!--  -->
         <slot
             name="errorHelp"
-            :error="error"
+            :error="inputState.error"
         >
             <span
-                v-if="error"
+                v-if="inputState.error"
                 class="error-help"
             >
-                {{ error }}
+                {{ inputState.error }}
             </span>
         </slot>
     </div>

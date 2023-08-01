@@ -50,13 +50,13 @@ const components = [
     ['LayoutDefault',   './components/layout-default/component.vue'],
     // @TODO
     // ['Form',            './components/form/component.vue'],
-    // ['NativeInput',     './components/form/native-input.vue'],
-    // ['NativeCheckbox',  './components/form/native-checkbox.vue'],
-    // ['InputLabel',      './components/form/input-label.vue'],
-    // ['FormInput',       './components/form/input.vue'],
-    // ['FormSelect',      './components/form/select.vue'],
-    // ['SelectIndicator', './components/form/select-indicator.vue'],
-    // ['FormCheckbox',    './components/form/checkbox.vue'],
+    // ['NativeInput',     './components/form/native-input/component.vue'],
+    // ['NativeCheckbox',  './components/form/native-checkbox/component.vue'],
+    // ['InputLabel',      './components/form/label/component.vue'],
+    // ['FormInput',       './components/form/input/component.vue'],
+    // ['FormSelect',      './components/form/select/component.vue'],
+    // ['SelectIndicator', './components/form/indicator/component.vue'],
+    // ['FormCheckbox',    './components/form/checkbox/component.vue'],
     // ['FormDrop',        './components/form-drop/component.vue'],
 ]
 
