@@ -3,6 +3,10 @@ import { ref, computed, reactive } from 'vue'
 import NativeCheckbox from '../native-checkbox/component.vue'
 import Indicator from '../indicator/component.vue'
 
+interface Emits {
+    (e: 'update:modelValue', value: any): void
+}
+
 interface Props {
     name: string
     modelValue?: string
@@ -10,6 +14,8 @@ interface Props {
     required?: boolean
     errorIcon?: string
 }
+
+const emit = defineEmits<Emits>()
 
 const prop = withDefaults(
     defineProps<Props>(), {
@@ -26,6 +32,7 @@ const state = reactive({
 const onUpdateState = ({ checked, error }: any) => {
     state.checked = checked
     state.error = error
+    emit('update:modelValue', value.value)
 }
 </script>
 

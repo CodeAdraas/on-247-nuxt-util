@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 
 interface State {
     filled: boolean
@@ -110,6 +110,8 @@ const emitAll = () => {
 
     emit('update:error', validationMessage.value)
 }
+
+onMounted(() => emitAll())
 </script>
 
 <template>
