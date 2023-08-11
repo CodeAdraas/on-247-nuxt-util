@@ -30,6 +30,7 @@ label {
     height: 100%;
     inset: 0;
     pointer-events: none;
+    color: var(--form-color);
 }
 
 span {
