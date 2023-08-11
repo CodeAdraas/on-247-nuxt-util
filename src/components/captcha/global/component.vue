@@ -10,13 +10,13 @@ const captcha = useCaptcha()
 const onVerify = (token: string) => {
     captcha.isVerifying = false
     captcha.isError = false
-    captcha.responseToken = token
+    captcha.token = token
 }
 
 const onInvalid = () => {
     captcha.isVerifying = false
     captcha.isError = true
-    captcha.responseToken = null
+    captcha.token = null
 }
 
 onMounted(() => {

@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch, onBeforeUnmount } from 'vue'
 import NativeInput from '../native-input/component.vue'
-// @TODO
-// import InputLabel from '../label/component.vue'
+import Label from '../label/component.vue'
 
 interface Emits {
     (e: 'update:modelValue', value: any): void
@@ -11,11 +10,13 @@ interface Emits {
 interface Props {
     name: string
     modelValue?: any
-    type?: 'text' | 'number' | 'email' | 'tel'
+    type?: 'text' | 'number' | 'email' | 'tel' | 'date'
     variant?: 'input' | 'textarea'
     required?: boolean
     min?: number
     max?: number
+    errorIcon?: string
+    floatingLabel?: boolean
 }
 
 const emit = defineEmits<Emits>()
@@ -23,22 +24,27 @@ const emit = defineEmits<Emits>()
 const prop = withDefaults(defineProps<Props>(), {
     type: 'text',
     variant: 'input',
-    required: true
+    required: true,
+    floatingLabel: true
 })
 
 const id = computed(() => `input-${(new Date).valueOf()}-${prop.name.toLowerCase().replace(/ |\-/gi, '_')}`)
-/** Bidirectional state value */
 const value = ref(prop.modelValue)
-
-const inputState = reactive({
+const state = reactive({
     filled: false,
     typing: false,
     error: undefined
 })
 
-const updateValue = val => {
+const updateValue = (val: any) => {
     emit('update:modelValue', val)
     value.value = val
+}
+
+const onUpdateState = ({ filled, typing, error }: any) => {
+    state.filled = filled
+    state.typing = typing
+    state.error = error
 }
 
 const stopWatchExternalValueChange = watch(
@@ -65,7 +71,6 @@ onBeforeUnmount(() => {
             >
                 <native-input
                     v-model="value"
-                    v-model:state="inputState"
                     :attributes="{
                         name,
                         id,
@@ -77,35 +82,41 @@ onBeforeUnmount(() => {
                         min,
                         max
                     }"
+                    @update:state="onUpdateState"
                 />
             </slot>
             <!--  -->
             <slot
                 name="label"
-                :typing="inputState.typing"
-                :filled="inputState.filled"
+                :typing="state.typing"
+                :filled="state.filled"
             >
-                <input-label
-                    :label-for="id"
-                    :hide="inputState.filled"
+                <Label
+                    :for-id="id"
+                    :hide="state.filled || type === 'date'"
                     :textarea="variant == 'textarea'"
-                    :floating="true"
+                    :floating="floatingLabel"
                 >
                     <slot />
-                </input-label>
+                </Label>
             </slot>
         </div>
         <!--  -->
         <slot
             name="errorHelp"
-            :error="inputState.error"
+            :error="state.error"
         >
-            <span
-                v-if="inputState.error"
+            <div
+                v-if="state.error"
                 class="error-help"
             >
-                {{ inputState.error }}
-            </span>
+                <icon
+                    v-if="errorIcon"
+                    :name="errorIcon"
+                    :sizes="15"
+                />
+                <span>{{ state.error }}</span>
+            </div>
         </slot>
     </div>
 </template>
@@ -118,11 +129,11 @@ onBeforeUnmount(() => {
 input,
 textarea {
     width: 100%;
-    padding: var(--form-spacing-y, 1em) var(--form-spacing-x, 1.5em);
+    padding: var(--form-spacing-y, 1em) var(--form-spacing-x, 1em);
     background-color: var(--form-bg-color);
     color: var(--form-color);
     border: 1px solid;
-    border-color: var(--form-color);
+    border-color: var(--form-border-color);
     border-radius: var(--form-border-radius, 0.5em);
     outline: none;
     font-size: var(--form-font-size, 1em);
@@ -132,25 +143,6 @@ textarea {
 textarea {
     resize: vertical;
     font-family: inherit;
-}
-
-label {
-    position: absolute;
-    top: 50%;
-    left: var(--form-spacing-x, 1.5em);
-    transform: translateY(-50%);
-    color: var(--form-color);
-    font-size: var(--form-font-size, 1em);
-    &.filled {
-        top: 0;
-        background-color: var(--form-bg-color);
-        padding: 0 5px;
-        font-size: var(--form-small-font-size, 0.8em);
-    }
-    &.text:not(.filled) {
-        top: var(--form-spacing-y, 1em);
-        transform: translateY(0);
-    }
 }
 
 .is-validated input,
@@ -164,10 +156,14 @@ label {
 }
 
 .error-help {
-    display: block;
-    padding: 0 0 0 var(--form-spacing-x, 1.5em);
-    margin: var(--form-spacing-y, 1em) 0 0 0;
+    display: flex;
+    gap: 0 var(--form-spacing-x, 1em);
+    padding: 0 0 0 var(--form-spacing-x, 1em);
+    margin: var(--form-spacing-y, 1em) 0;
     font-size: var(--form-small-font-size, 0.8em);
     color: var(--form-helper-color);
+    & :deep(> .icon) {
+        color: var(--form-invalid-color);
+    }
 }
 </style>

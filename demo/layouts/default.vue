@@ -1,9 +1,9 @@
 <template>
-    <layout-default>
-        <main style="padding:0 20px;">
-            <slot />
-        </main>
-    </layout-default>
+    <Header />
+    <main style="padding:0 20px;">
+        <slot />
+    </main>
+    <Footer />
 </template>
 
 <style>

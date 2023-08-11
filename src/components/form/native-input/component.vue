@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, computed, reactive } from 'vue'
 
 interface State {
     filled: boolean
@@ -23,7 +23,7 @@ interface Props {
     attributes: {
         name: string
         id?: string
-        type: 'text' | 'number' | 'email' | 'tel'
+        type: 'text' | 'number' | 'email' | 'tel' | 'date'
         variant?: 'input' | 'textarea'
     }
     validation?: {
@@ -31,7 +31,7 @@ interface Props {
         min?: number
         max?: number
     }
-    state: State
+    state?: State
 }
 
 const emit = defineEmits<Emits>()
@@ -54,23 +54,26 @@ const prop = withDefaults(
     })
 })
 
+const getVariant = computed(() => prop.attributes?.variant || 'input')
+
 const value = ref(prop.modelValue)
 const isFilled = ref(!!prop.modelValue)
 const isTyping = ref(prop.typing)
-const validityMessage = ref(undefined)
-
-const state = reactive({
+const validationMessage = ref(undefined)
+const state: State = reactive({
     filled: isFilled,
     typing: isTyping,
-    error: validityMessage
+    error: validationMessage
 })
 
 const onHandleFocus = (evt: any) => {
     isTyping.value = true
 
-    // Check for validity and set error message if needed
-    if (! evt.target.reportValidity()) {
-        validityMessage.value = evt.target.validityMessage
+    evt.target.reportValidity()
+
+    // We want to report validity the native way when the user is typing
+    if (validationMessage.value) {
+        validationMessage.value = undefined
     }
 }
 
@@ -78,18 +81,23 @@ const onHandleInput = (evt: any) => {
     value.value = evt.target.value
     isFilled.value = !!evt.target.value
 
-    // Reset error message
-    if (isFilled.value && validityMessage.value) {
-        validityMessage.value = undefined
-    }
-
     emitAll()
 }
 
-const onHandleBlur = () => isTyping.value = false
+const onHandleBlur = (evt: any) => {
+    isTyping.value = false
+
+    // We want to add non-native validation report when not typing
+    if (! evt.target.checkValidity()) {
+        validationMessage.value = evt.target.validationMessage
+    }
+}
 
 const onHandleInvalid = (evt: any) => {
-    emit('update:error', evt.target.validityMessage)
+    if (! isTyping.value) {
+        validationMessage.value = evt.target.validationMessage
+        emit('update:state', state)
+    }
 }
 
 const emitAll = () => {
@@ -99,17 +107,21 @@ const emitAll = () => {
 
     emit('update:typing', isTyping.value)
     emit('update:filled', isFilled.value)
-    emit('update:error', validityMessage.value)
+
+    emit('update:error', validationMessage.value)
 }
 </script>
 
 <template>
-    <input
-        :required="validation.required"
+    <component
+        :is="getVariant"
+
+        :type="attributes.type"
         :id="attributes.id"
         :name="attributes.name"
-        :type="attributes.type"
         :value="value"
+
+        :required="validation.required"
 
         @focus="onHandleFocus"
         @input="onHandleInput"

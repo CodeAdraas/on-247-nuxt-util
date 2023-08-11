@@ -30,7 +30,7 @@ const globalCaptcha = useCaptcha()
 const formDrop = useFormDrop(prop?.formDrop?.url || runtimeConfig.public.formDrop.url)
 
 const captchaToken = ref()
-const validityMessage = ref()
+const validationMessage = ref()
 const isLoading = ref(false)
 const isCaptchaLoading = ref(true)
 const isError = ref(false)
@@ -40,17 +40,17 @@ const onCaptchaError = () => setErrorMessage(prop.captcha.errorMessage)
 
 const setSuccessMessage = (message: string) => {
     isError.value = false
-    validityMessage.value = message
+    validationMessage.value = message
 }
 
 const setErrorMessage = (message: string) => {
     isError.value = true
-    validityMessage.value = message
+    validationMessage.value = message
 }
 
 const onHanldeSubmit = (formData: FormData) => {
     isLoading.value = true
-    validityMessage.value = undefined
+    validationMessage.value = undefined
 
     if (formData.has('token')) {
         formData.delete('token')
@@ -79,7 +79,7 @@ const stopWatchCaptchaToken = watch(
         // Remove captcha error
         if (token && isError.value) {
             isError.value = false
-            validityMessage.value = undefined
+            validationMessage.value = undefined
         }
     },
     { immediate: true }
@@ -116,8 +116,8 @@ onBeforeUnmount(() => {
         </template>
         <!--  -->
         <template #message>
-            <span v-if="validityMessage">
-                {{ validityMessage }}
+            <span v-if="validationMessage">
+                {{ validationMessage }}
             </span>
         </template>
     </Form>

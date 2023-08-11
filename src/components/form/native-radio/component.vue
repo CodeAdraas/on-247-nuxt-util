@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, reactive, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, reactive, watch, onMounted, onBeforeUnmount } from 'vue'
 
 interface State {
     checked: boolean
@@ -21,7 +21,8 @@ interface Props {
     attributes: {
         name: string
         id?: string
-        values: [ string, string ]
+        value: string
+        multiple?: boolean
     }
     validation?: {
         required?: boolean
@@ -38,7 +39,8 @@ const prop = withDefaults(
     attributes: () => ({
         name: '',
         id: undefined,
-        values: [ 'true', 'false' ]
+        value: '',
+        multiple: false
     }),
     validation: () => ({
         required: true
@@ -46,7 +48,7 @@ const prop = withDefaults(
 })
 
 const checked = ref(false)
-const value = computed(() => prop.attributes.values[ checked.value ? 0 : 1 ])
+const radio = ref(prop.modelValue)
 const validationMessage = ref(undefined)
 const state: State = reactive({
     checked: checked,
@@ -70,7 +72,7 @@ const onHandleInvalid = (evt: any) => {
 }
 
 const emitAll = () => {
-    emit('update:modelValue', value.value)
+    emit('update:modelValue', radio.value)
 
     emit('update:state', state)
 
@@ -85,22 +87,11 @@ const stopWatchChecked = watch(
 )
 
 onMounted(() => {
-    // If a value was given, check if the checkbox should be checked
-    // or unchecked.
-    if (!!prop.modelValue) {
-        switch (prop.modelValue) {
-            case prop.attributes.values[0]:
-                checked.value = true
-                break
-            case prop.attributes.values[1]:
-                checked.value = false
-                break
-            default:
-                console.warn('Invalid checkbox value given')
-        }
-
-        emitAll()
+    if (radio.value === prop.attributes.value) {
+        checked.value = true
     }
+
+    emitAll()
 })
 
 onBeforeUnmount(() => stopWatchChecked())
@@ -108,16 +99,17 @@ onBeforeUnmount(() => stopWatchChecked())
 
 <template>
     <input
-        type="checkbox"
+        type="radio"
+
+        v-model="radio"
+
         :id="attributes?.id"
         :name="attributes.name"
-
-        :checked="checked"
-        :value="value"
+        :value="attributes.value"
 
         :required="validation.required"
 
         @change="onHandleChange"
         @invalid="onHandleInvalid"
     />
-</template>
+</template> 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRuntimeConfig } from 'nuxt/app'
 import CfTurnstile from './cf-turnstile/component.vue'
-import CfTurnstileGlobal from './cf-turnstile/global.vue'
+import CfTurnstileGlobal from './global/component.vue'
 
 type Appearance =
     | 'always'

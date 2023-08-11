@@ -7,14 +7,9 @@
             <router-link to="/browser" style="display: block;">Browser detect</router-link>
             <router-link to="/lazyload" style="display: block;">Lazyload</router-link>
             <router-link to="/scroll" style="display: block;">Scroll</router-link>
-            <router-link to="/slider" style="display: block;">Swiper slider</router-link>
             <router-link to="/captcha" style="display: block;">Captcha</router-link>
-            <router-link to="/faq" style="display: block;">FAQ</router-link>
-            <router-link to="/cms" style="display: block;">CMS</router-link>
             <router-link to="/credit" style="display: block;">Credit</router-link>
             <router-link to="/form" style="display: block;">Form</router-link>
-            <router-link to="/form-native-fields" style="display: block;">Form native fields</router-link>
-            <router-link to="/formdrop" style="display: block;">FormDrop</router-link>
         </nav>
     </header>
 </template>

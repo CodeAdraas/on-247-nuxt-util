@@ -27,37 +27,34 @@ interface BrowserPlugin {
 
 declare module 'vue' {
 	interface ComponentCustomProperties  {
-		$window?: Window;
-		$browser: BrowserPlugin;
-		$breakpoint: BreakpointPlugin;
+		$window?: Window
+		$browser: BrowserPlugin
+		$breakpoint: BreakpointPlugin
 	}
 }
 
-interface NuxterplateModuleOptions {
-    swiper?: boolean
-    cms?: boolean
-}
+interface NuxterplateModuleOptions {}
 
 const components = [
     ['Icon',            './components/icon/component.vue'],
-    ['UtilLazyImage',   './components/util-lazy/image/component.vue'],
-    ['UtilLazyVideo',   './components/util-lazy/video/component.vue'],
-    ['TextReveal',      './components/text-reveal/component.vue'],
-    ['UtilSlider',      './components/util-slider/component.vue'],
+
+    ['ImageLazy',       './components/lazy/image/component.vue'],
+    ['VideoLazy',       './components/lazy/video/component.vue'],
+
     ['Captcha',         './components/captcha/component.vue'],
-    ['Faq',             './components/faq/component.vue'],
-    ['credits-embed',   './components/credits-embed/component.vue'],
-    ['LayoutDefault',   './components/layout-default/component.vue'],
-    // @TODO
-    // ['Form',            './components/form/component.vue'],
-    // ['NativeInput',     './components/form/native-input/component.vue'],
-    // ['NativeCheckbox',  './components/form/native-checkbox/component.vue'],
-    // ['InputLabel',      './components/form/label/component.vue'],
-    // ['FormInput',       './components/form/input/component.vue'],
-    // ['FormSelect',      './components/form/select/component.vue'],
-    // ['SelectIndicator', './components/form/indicator/component.vue'],
-    // ['FormCheckbox',    './components/form/checkbox/component.vue'],
-    // ['FormDrop',        './components/form-drop/component.vue'],
+
+    ['CreditsEmbed',    './components/credits-embed/component.vue'],
+
+    ['Form',            './components/form/component.vue'],
+    ['FormInput',       './components/form/input/component.vue'],
+    ['FormCheckbox',    './components/form/checkbox/component.vue'],
+    ['FormRadio',       './components/form/radio/component.vue'],
+    ['FormLabel',       './components/form/label/component.vue'],
+    ['FormIndicator',   './components/form/indicator/component.vue'],
+
+    ['NativeInput',     './components/form/native-input/component.vue'],
+    ['NativeCheckbox',  './components/form/native-checkbox/component.vue'],
+    ['NativeRadio',     './components/form/native-radio/component.vue'],
 ]
 
 export default defineNuxtModule<NuxterplateModuleOptions>({
@@ -68,20 +65,10 @@ export default defineNuxtModule<NuxterplateModuleOptions>({
             nuxt: '^3.6.0'
         }
     },
-    defaults: (_) => ({
-        swiper: true,
-        cms: true
-    }),
     setup(moduleOptions, nuxt) {
         const resolver = createResolver(import.meta.url)
 
         nuxt.options.css.push(resolver.resolve('assets/css/breakpoint.css'))
-        if (moduleOptions.swiper) {
-            nuxt.options.css.push('swiper/css')
-        }
-        if (moduleOptions.cms) {
-            nuxt.options.css.push(resolver.resolve('assets/css/cms.css'))
-        }
 
         for (let [name, filePath] of components) addComponent({
             name,
@@ -93,6 +80,5 @@ export default defineNuxtModule<NuxterplateModuleOptions>({
         addPlugin(resolver.resolve('plugins/window'))
         addPlugin(resolver.resolve('plugins/browser'))
         addPlugin(resolver.resolve('plugins/breakpoint'))
-        addPlugin(resolver.resolve('plugins/animate'))
     }
 })

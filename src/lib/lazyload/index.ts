@@ -20,28 +20,30 @@ export class Lazy {
         this.listeners = []
     }
 
-    set(lazyload: any) {
-        this.lazyload = lazyload
-    }
-
-    update() {
-        this.lazyload.update()
-    }
-
-    loaded(el: Element, callback: GenericCallback) {
-        this.listeners.push({el, callback})
-    }
-
     static withCallback() {
         let instance = new this()
         let options: Record<string, any> = {}
+
+        // vanilla-lazyload specific options
         options.unobserve_entered = true
-        options.callback_enter = instance.callbackEnter.bind(instance)
-        instance.set(isClient ? new LazyLoad(options) : new MockLazyload())
+        options.callback_enter = instance.enterCallback.bind(instance)
+
+        instance.lazyload = isClient
+            ? new LazyLoad(options)
+            : new MockLazyload()
+
         return instance
     }
 
-    private callbackEnter(loadedEl: Element) {
+    listen(el: Element, callback: GenericCallback) {
+        this.listeners.push({el, callback})
+    }
+
+    update() {
+        this.lazyload.update(this.listeners.map(({el}) => el))
+    }
+
+    private enterCallback(loadedEl: Element) {
         for (let {el, callback} of this.listeners) {
             if(el === loadedEl) {
                 callback()
