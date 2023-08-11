@@ -60,7 +60,7 @@ const onHandleSubmit = (evt: any) => {
     font-size: var(--form-font-size, 1rem);
     display: flex;
     flex-direction: column;
-    gap: var(--form-gap-y, 1.5em) 0;
+    gap: var(--form-gap, 1.5em);
     &--btn {
         font-size: inherit;
         border: 1px solid var(--form-button-border-color, #fff);

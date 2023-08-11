@@ -96,7 +96,7 @@ const onUpdateState = ({ checked, error }: any) => {
 
 label {
     cursor: inherit;
-    color: var(--form-color);
+    color: var(--form-invert-color);
 }
 
 .error-help {
