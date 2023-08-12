@@ -38,7 +38,8 @@ export class Lazy {
 
     listen(el: HTMLElement, callback: GenericCallback): UnsubscribeCallback {
         this.listeners.push({el, callback})
-        this.lazyload.update([el])
+        // NOTE: do not pass in the element, will break
+        this.lazyload.update()
         return () => this.removeListener(el)
     }
 
