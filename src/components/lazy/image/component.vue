@@ -18,6 +18,7 @@ onMounted(() => {
 <template>
     <img
         ref="el"
+        class="lazy"
     />
 </template>
 

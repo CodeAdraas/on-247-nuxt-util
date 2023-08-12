@@ -18,6 +18,7 @@ onMounted(() => {
 <template>
     <video
         ref="el"
+        class="lazy"
     >
         <slot />
     </video>

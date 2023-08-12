@@ -9,8 +9,7 @@ interface Listener {
 type UnsubscribeCallback = () => void
 
 class MockLazyload {
-    update() {}
-    destroy() {}
+    listen() {}
 }
 
 export class Lazy {
