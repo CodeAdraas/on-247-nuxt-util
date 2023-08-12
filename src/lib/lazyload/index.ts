@@ -2,9 +2,11 @@ import LazyLoad from 'vanilla-lazyload'
 import { isClient, type GenericCallback } from '../util'
 
 interface Listener {
-    el: Element
+    el: HTMLElement
     callback: GenericCallback
 }
+
+type UnsubscribeCallback = () => void
 
 class MockLazyload {
     update() {}
@@ -35,12 +37,10 @@ export class Lazy {
         return instance
     }
 
-    listen(el: Element, callback: GenericCallback) {
+    listen(el: HTMLElement, callback: GenericCallback): UnsubscribeCallback {
         this.listeners.push({el, callback})
-    }
-
-    update() {
-        this.lazyload.update(this.listeners.map(({el}) => el))
+        this.lazyload.update([el])
+        return () => this.removeListener(el)
     }
 
     private enterCallback(loadedEl: Element) {
