@@ -36,6 +36,10 @@ declare module 'vue' {
 interface NuxterplateModuleOptions {}
 
 const components = [
+    ['ScrollTextRevealLines', './components/scroll/text/reveal-lines.vue'],
+    ['ScrollTextRevealWords', './components/scroll/text/reveal-words.vue'],
+    ['ScrollTextRevealLetters', './components/scroll/text/reveal-letters.vue'],
+
     ['Icon',            './components/icon/component.vue'],
 
     ['ImageLazy',       './components/lazy/image/component.vue'],
@@ -80,5 +84,6 @@ export default defineNuxtModule<NuxterplateModuleOptions>({
         addPlugin(resolver.resolve('plugins/window'))
         addPlugin(resolver.resolve('plugins/browser'))
         addPlugin(resolver.resolve('plugins/breakpoint'))
+        addPlugin(resolver.resolve('plugins/animate'))
     }
 })
