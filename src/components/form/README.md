@@ -23,3 +23,5 @@
 - `--form-indicator-color: #000;`
 - `--form-indicator-size: 1em;`
 - `--form-indicator-roundness: 50em;`
+
+- `--form-radio-direction: column;`

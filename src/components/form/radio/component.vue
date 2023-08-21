@@ -104,7 +104,8 @@ const onUpdateState = ({ error }: any) => {
 
 .radios {
     display: flex;
-    gap: 0 var(--form-spacing-x, 1em);
+    flex-direction: var(--form-radio-direction, column);
+    gap: var(--form-spacing-y, 1.5em) var(--form-spacing-x, 1em);
     padding-bottom: var(--form-spacing-y, 1em);
     & > label {
         display: flex;

@@ -16,6 +16,7 @@ defineProps(['checked'])
     border-radius: var(--form-indicator-roundness, 0.5em);
     border: 1px solid;
     border-color: var(--form-border-color, inherit);
+    flex: 1 0 auto;
 }
 
 .indicator {
