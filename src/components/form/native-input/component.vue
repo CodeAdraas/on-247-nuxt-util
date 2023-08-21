@@ -124,6 +124,8 @@ onMounted(() => emitAll())
         :value="value"
 
         :required="validation.required"
+        :min="validation.min"
+        :max="validation.max"
 
         @focus="onHandleFocus"
         @input="onHandleInput"
