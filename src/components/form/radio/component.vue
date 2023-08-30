@@ -3,6 +3,10 @@ import { ref, computed, reactive } from 'vue'
 import NativeRadio from '../native-radio/component.vue'
 import Indicator from '../indicator/component.vue'
 
+interface Emits {
+    (e: 'update:modelValue', value?: string): void
+}
+
 interface Props {
     name: string
     modelValue?: string
@@ -11,6 +15,8 @@ interface Props {
     required?: boolean
     errorIcon?: string
 }
+
+const emit = defineEmits<Emits>()
 
 const prop = withDefaults(
     defineProps<Props>(), {
@@ -26,6 +32,7 @@ const state = reactive({
 
 const onUpdateState = ({ error }: any) => {
     state.error = error
+    emit('update:modelValue', radio.value)
 }
 </script>
 
