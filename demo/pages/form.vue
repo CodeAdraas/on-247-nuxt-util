@@ -71,7 +71,11 @@ onBeforeUnmount(() => stop())
         <form-radio
             v-model="fields.drink"
             name="drink"
-            :values="['Coca Cola', 'Capri Sun', 'Gatoraid']"
+            :values="[
+                'Coca Cola',
+                ['capri-sun', 'Capri Sun'],
+                'Gatoraid'
+            ]"
             error-icon="alert-triangle"
         >
             What drink do you want?

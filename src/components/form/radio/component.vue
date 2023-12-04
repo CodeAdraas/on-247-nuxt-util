@@ -7,10 +7,12 @@ interface Emits {
     (e: 'update:modelValue', value?: string): void
 }
 
+type Value = string | [string, string]
+
 interface Props {
     name: string
     modelValue?: string
-    values: string[]
+    values: Value[]
     multiple?: boolean
     required?: boolean
     errorIcon?: string
@@ -29,6 +31,18 @@ const radio = ref(prop.modelValue)
 const state = reactive({
     error: undefined
 })
+
+const getValue = (value: Value) => {
+    return typeof value === 'string'
+        ? value
+        : value[0]
+}
+
+const getLabel = (value: Value) => {
+    return typeof value === 'string'
+        ? value
+        : value[1]
+}
 
 const onUpdateState = ({ error }: any) => {
     state.error = error
@@ -66,7 +80,7 @@ const onUpdateState = ({ error }: any) => {
                             :attributes="{
                                 id: `${id}_${index}`,
                                 name,
-                                value,
+                                value: getValue(value),
                                 multiple
                             }"
                             :validation="{
@@ -74,8 +88,8 @@ const onUpdateState = ({ error }: any) => {
                             }"
                             @update:state="onUpdateState"
                         />
-                        <indicator :checked="radio.includes(value)" />
-                        {{ value }}
+                        <indicator :checked="radio.includes(getValue(value))" />
+                        {{ getLabel(value) }}
                     </label>
                 </div>
             </slot>
