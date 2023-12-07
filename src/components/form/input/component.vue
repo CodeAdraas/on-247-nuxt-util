@@ -10,7 +10,7 @@ interface Emits {
 interface Props {
     name: string
     modelValue?: any
-    type?: 'text' | 'number' | 'email' | 'tel' | 'date'
+    type?: 'text' | 'number' | 'email' | 'tel' | 'date' | 'password'
     variant?: 'input' | 'textarea'
     required?: boolean
     min?: number

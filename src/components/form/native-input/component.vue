@@ -23,7 +23,7 @@ interface Props {
     attributes: {
         name: string
         id?: string
-        type: 'text' | 'number' | 'email' | 'tel' | 'date'
+        type: 'text' | 'number' | 'email' | 'tel' | 'date' | 'password'
         variant?: 'input' | 'textarea'
     }
     validation?: {
