@@ -2,25 +2,32 @@
 import { ref } from 'vue'
 
 interface Emits {
-    (e: 'submit', formData: FormData): void
+    (e: 'submit', formData: FormData): void;
+    (e: 'submit-obj', data: Record<string, any>): void;
 }
 
 interface Props {
-    submitLabel: string
-    loadingLabel: string
-    isLoading?: boolean
-    isError?: boolean
+    submitLabel?: string
+    loadingLabel?: string
+    loading?: boolean
+    error?: boolean
 }
 
-defineProps<Props>()
+withDefaults(
+    defineProps<Props>(), {
+    submitLabel: 'Submit',
+    loadingLabel: 'Loading..'
+})
 
 const emit = defineEmits<Emits>()
 const isValidityChecked = ref(false)
 
 const onHandleSubmit = (evt: any) => {
     isValidityChecked.value = true
-    if (evt.target.checkValidity()) {        
-        emit('submit', new FormData(evt.target))
+    if (evt.target.checkValidity()) {       
+        const formData = new FormData(evt.target) 
+        emit('submit', formData)
+        emit('submit-obj', Object.fromEntries(formData.entries()))
     }
 }
 </script>
@@ -28,7 +35,8 @@ const onHandleSubmit = (evt: any) => {
 <template>
     <form
         :class="['form', {'is-validated': isValidityChecked}]"
-        novalidate @submit.prevent="onHandleSubmit"
+        novalidate
+        @submit.prevent="onHandleSubmit"
     >
         <slot />
         <!--  -->
@@ -36,20 +44,20 @@ const onHandleSubmit = (evt: any) => {
             <slot name="captcha" />
         </div>
         <!--  -->
-        <div :class="['slot slot--message', {'error': isError}]">
+        <div :class="['slot slot--message', {'is-error': error}]">
             <slot name="message" />
         </div>
         <!--  -->
         <slot
             name="button"
-            :loading="isLoading"
+            :loading="loading"
         >
             <button
                 type="submit"
-                class="form--btn"
-                :disabled="isLoading"
+                class="form-button"
+                :disabled="loading"
             >
-                {{ isLoading ? loadingLabel : submitLabel }}
+                {{ loading ? loadingLabel : submitLabel }}
             </button>
         </slot>
     </form>
@@ -61,7 +69,7 @@ const onHandleSubmit = (evt: any) => {
     display: flex;
     flex-direction: column;
     gap: var(--form-gap, 1.5em);
-    &--btn {
+    &-button {
         font-size: inherit;
         border: 1px solid var(--form-button-border-color, #fff);
         border-radius: var(--form-border-radius, 0.5em);
