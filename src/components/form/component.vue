@@ -11,6 +11,7 @@ interface Props {
     loadingLabel?: string
     loading?: boolean
     error?: boolean
+    disabled?: boolean
 }
 
 withDefaults(
@@ -55,7 +56,7 @@ const onHandleSubmit = (evt: any) => {
             <button
                 type="submit"
                 class="form-button"
-                :disabled="loading"
+                :disabled="disabled || loading"
             >
                 {{ loading ? loadingLabel : submitLabel }}
             </button>
