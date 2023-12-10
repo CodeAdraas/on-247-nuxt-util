@@ -10,7 +10,7 @@ interface Props {
         | 'white-hc'
 }
 
-const prop = defineProps<Props>()
+const prop = withDefaults(defineProps<Props>(), {height: 64})
 const theme_ = computed(
     () => prop.theme
        || useRuntimeConfig().public?.creditTheme
@@ -22,7 +22,7 @@ const theme_ = computed(
         loading="lazy"
         :src="`https://credit.on-247.nl?theme=${theme_}`"
         width="100%"
-        :height="`${height || 80}px`"
+        :height="`${height}px`"
         frameborder="0"
     />
 </template>
