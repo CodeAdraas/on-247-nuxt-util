@@ -3,7 +3,7 @@ import { ref } from 'vue'
 
 interface Emits {
     (e: 'submit', formData: FormData): void;
-    (e: 'submit-obj', data: Record<string, any>): void;
+    (e: 'submitObj', data: Record<string, any>): void;
 }
 
 interface Props {
@@ -28,7 +28,7 @@ const onHandleSubmit = (evt: any) => {
     if (evt.target.checkValidity()) {       
         const formData = new FormData(evt.target) 
         emit('submit', formData)
-        emit('submit-obj', Object.fromEntries(formData.entries()))
+        emit('submitObj', Object.fromEntries(formData.entries()))
     }
 }
 </script>
